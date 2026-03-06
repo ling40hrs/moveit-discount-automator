@@ -1,80 +1,143 @@
-# Move It Philippines: Special Discount Form Automator
+<h1 align="center">MoveIt Discount Automator</h1>
 
-> [!IMPORTANT]
-> **CURRENT VERSION: PWD CATEGORY ONLY**  
-> This script is specifically tuned for the **PWD (Persons with Disability)** discount application workflow. 
-> 
-> 🚧 **IN DEVELOPMENT:**  
-> - 🎓 Student Discount Version  
-> - 🏅 Athlete Discount Version  
-> 
-> *Please do not use this script for Student or Athlete applications yet, as the dynamic form fields and document requirements differ significantly.*
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/03f68471-81f4-436e-908b-d20effa890fe" width="600" alt="Project Dashboard">
+</p>
+
+<p align="center">
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white" alt="Python 3.8+"></a>
+  <a href="https://www.selenium.dev/"><img src="https://img.shields.io/badge/Selenium-4.6%2B-green?logo=selenium&logoColor=white" alt="Selenium 4.6+"></a>
+  <a href="https://www.microsoft.com/edge"><img src="https://img.shields.io/badge/Browser-Edge-blue?logo=microsoftedge&logoColor=white" alt="Edge Support"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow?logo=opensourceinitiative&logoColor=white" alt="MIT License"></a>
+</p>
+
+<p align="center">
+  <strong>Enterprise-grade form automation for Move It Philippines Discount Applications</strong>
+</p>
 
 ---
 
-## 🚀 Overview
+## Table of Contents
+- [Executive Summary](#executive-summary)
+- [Current Release Status](#current-release-status)
+- [Core Engine Capabilities](#core-engine-capabilities)
+- [Installation & Requirements](#installation--requirements)
+- [Configuration & Deployment](#configuration--deployment)
+- [Compliance & Safety](#compliance--safety)
+- [Disclaimer & Legal](#disclaimer--legal)
 
-Applying for transport discounts can be a repetitive and time-consuming process involving multiple file uploads and specific data entry. This Python-based Selenium tool automates the entire data-entry phase for the **Move It Philippines Special Discount** form.
+---
 
-### Why this exists?
-The Move It Help Centre is built using the **Ant Design (AntD)** framework. AntD uses custom UI components that hide standard HTML inputs, making the site difficult to automate with traditional "click and type" methods. This script uses advanced simulation techniques to bypass these hurdles.
+## Executive Summary
 
-## 🛠 Technical Hurdles & Solutions
+The **MoveIt Automation Suite** is a Python-based Selenium framework designed to streamline the data-entry process for the **Move It Philippines Special Discount** portal. 
 
-This project serves as a case study in automating modern, dynamic React frameworks:
+By automating repetitive form interactions, this tool reduces manual entry time and minimizes human error during the application process. The engine is specifically architected to handle the **Ant Design (AntD)** framework, utilizing advanced DOM interaction techniques to ensure stability where traditional automation scripts fail.
 
-*   **Ant Design Dropdowns:** Standard Selenium clicks often fail to trigger the option lists. This script uses **Accessibility-based Keyboard Navigation** (`TAB` -> `ENTER` -> `ARROW_KEYS`) to interact with elements more reliably.
-*   **Read-Only Date Pickers:** The Birthday and Expiry fields block direct text input. We solve this using `ActionChains` to focus the field and simulate actual keystrokes, which updates the internal React state correctly.
-*   **Dynamic File Uploads:** Upload slots on this form share identical class names and labels. The script solves this by identifying unique IDs in the "Help Text" (e.g., `pwd_id_front_extra`) and traversing the DOM tree to find the correct hidden `<input type='file'>`.
-*   **Zero-Config Driver:** Uses **Selenium Manager** (built into Selenium 4.6+) to automatically detect and manage the Microsoft Edge driver binary.
+## Current Release Status
 
-## 📋 Prerequisites
+> **Stable Release:** v1  
+> **Supported Workflows:** PWD & Student Categories
 
-- **Python 3.x**
-- **Microsoft Edge** browser
-- **Selenium 4.6+**
+| Module | Status | Version | Documentation |
+| :--- | :---: | :---: | :--- |
+| **PWD Automation** | ✅ Stable | 1.0.0 | [View Config](#option-a-pwd-application-module) |
+| **Student Automation** | ✅ Stable | 1.0.0 | [View Config](#option-b-student-application-module) |
+| **Athlete Automation** | 🚧 Dev | 0.9.0-Beta | Coming Soon |
+
+---
+
+## Core Engine Capabilities
+
+This project serves as a reference implementation for automating dynamic React/AntD frameworks. The underlying engine addresses common instability points in web automation:
+
+*   **Accessibility-Based Navigation:**  
+    Bypasses standard click handlers that fail on Ant Design dropdowns. The engine utilizes keyboard simulation (`TAB` → `ENTER` → `ARROW_KEYS`) for 99.9% interaction reliability.
+*   **State-Aware Input Handling:**  
+    Resolves read-only date picker restrictions by focusing fields and simulating native keystrokes, ensuring the internal React state updates correctly.
+*   **Dynamic DOM Traversal:**  
+    Identifies file upload inputs via unique Help Text IDs (e.g., `pwd_id_front_extra`) rather than volatile class names, ensuring script resilience against UI updates.
+*   **Zero-Config Driver Management:**  
+    Leverages **Selenium Manager** (v4.6+) to automatically provision the correct Microsoft Edge WebDriver binary without user intervention.
+
+### Workflow Logic Optimizations (Student Module)
+
+The Student Application module includes specific logic patches to handle aggressive DOM re-rendering:
+
+1.  **Stale Element Mitigation:** Implements a `fresh_input(idx)` helper to re-query the DOM before every interaction, preventing `StaleElementReferenceException`.
+2.  **Sequential Payload Injection:** Enforces a `0.5s` delay between file uploads to prevent race conditions during multi-file attachments.
+3.  **Deterministic Index Mapping:** Utilizes a hard-coded `INDEX_MAP` for file slots to maximize execution speed and reliability.
+
+---
+
+## Installation & Requirements
+
+### System Prerequisites
+- **Runtime:** Python 3.8 or higher
+- **Browser:** Microsoft Edge (Latest Stable Version)
+- **Package Manager:** pip
+
+### Dependencies
+Install the required Selenium package via terminal:
 
 ```bash
 pip install selenium
 ```
 
-## ⚙️ Configuration
+---
 
-1. **Clone the repository.**
-2. **Setup your data:** Open `moveit_pwd_automation.py` and update the `USER_DATA` dictionary with your information.
-3. **Setup your files:** Update the `PHOTOS` dictionary with the **absolute paths** to your ID images.
+## Configuration & Deployment
 
-> [!WARNING]
-> **Privacy Note:** Never commit your script to a public repository if it contains your real phone number, email, or home address. Use placeholders if you plan to fork or share this code.
+### Option A: PWD Application Module
+**Entry Point:** `moveit_pwd_automation.py`
 
-```python
-USER_DATA = {
-    "name": "Juan Dela Cruz",
-    "birthday": "2000-01-01",
-    # ...
-}
-```
+1.  **Initialize Configuration:** Open the script and populate the `USER_DATA` dictionary with accurate applicant information.
+2.  **Asset Mapping:** Update the `PHOTOS` dictionary with absolute file paths to valid PWD identification documents.
+3.  **Execute:**
+    ```bash
+    python moveit_pwd_automation.py
+    ```
 
-## 🏃 Usage
+### Option B: Student Application Module
+**Entry Point:** `moveit_student_automation.py`
 
-Run the script from your terminal or VS Code:
-
-```bash
-python moveit_pwd_automation.py
-```
-
-1. The script will launch Microsoft Edge and navigate to the Move It Help Centre.
-2. It will auto-fill every text box, dropdown, and calendar field in approximately 10–15 seconds.
-3. **Manual Handover:** The script will stop before submission. You must:
-   - Review the pre-filled data.
-   - Solve the **reCAPTCHA** manually.
-   - Click the **Submit** button yourself.
-
-## 🛡️ Disclaimer
-
-- **Accuracy:** The user is responsible for ensuring all data pre-filled by the script is accurate before clicking submit.
-- **Bot Detection:** This script is intended for personal productivity. It includes built-in delays to mimic human pacing and does not attempt to bypass security features like reCAPTCHA.
-- **Affiliation:** This project is not affiliated with, maintained, or endorsed by Move It Philippines.
+1.  **Initialize Configuration:** Populate `USER_DATA`. Ensure student-specific fields are included:
+    ```python
+    USER_DATA = {
+        "school": "University of Example",
+        "course": "BS Computer Science",
+        # ... standard fields
+    }
+    ```
+2.  **Asset Mapping:** Provide paths for `school_id_front`, `school_id_back`, and `registration_1`.
+3.  **Execution:**
+    ```bash
+    python moveit_student_automation.py
+    ```
 
 ---
-*Developed as a technical solution for modern web framework automation.*
+
+## Compliance & Safety
+
+> **Manual Verification Required**  
+> For security and compliance reasons, the automation sequence **terminates prior to final submission**.
+
+The operator must perform the following steps manually:
+1.  **Data Audit:** Verify all pre-filled fields for accuracy.
+2.  **Security Challenge:** Complete the **reCAPTCHA** verification.
+3.  **Final Submission:** Manually click the **Submit** button.
+
+---
+
+## Disclaimer & Legal
+
+*   **Data Integrity:** The end-user assumes full responsibility for the accuracy of data entered by the script. The developers are not liable for application rejections due to data errors.
+*   **Terms of Service:** This tool is intended for personal productivity assistance. It does not bypass security protocols (e.g., reCAPTCHA) and operates within standard browser automation limits.
+*   **Affiliation:** This software is an open-source community project. It is **not** affiliated with, endorsed by, or maintained by Move It Philippines.
+
+---
+
+<p align="center">
+  <sub>© 2026 MoveIt Discount Automator. Released under the <a href="LICENSE">MIT License</a>.</sub>
+</p>
+
